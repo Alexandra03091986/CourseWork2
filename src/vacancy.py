@@ -19,7 +19,7 @@ class Vacancy:
         self.name = name
         self.salary = self._validate_salary(salary)
         self.city = city
-        self.requirements = self._validate_requirements(requirements)
+        self.requirements = self._validate_requirements_and_clean(requirements)
         self.url = url
 
     def _validate_salary(self, salary: int | None) -> int:
@@ -40,11 +40,18 @@ class Vacancy:
             return salary
         return 0
 
-    def _validate_requirements(self, requirements: str) -> str:
+    @classmethod
+    def _validate_requirements_and_clean(cls, requirements: str) -> str:
         """Валидация требований"""
-        if requirements is None:
+        # if not requirements or not isinstance(requirements, str):
+        #     return "Требования не указаны"
+        # return requirements.strip()
+        if not requirements or not isinstance(requirements, str):
             return "Требования не указаны"
-        return requirements.strip()
+
+        # Очищаем от HTML тегов
+        cleaned = re.sub(r'<[^>]+>', '', requirements)
+        return cleaned.strip()
 
     # Методы сравнения
     def __eq__(self, other) -> bool:
@@ -113,9 +120,10 @@ class Vacancy:
 
             # Требования
             requirements_data = data.get('snippet', {})
-            requirements = requirements_data.get('requirement', 'Требования не указаны') if isinstance(requirements_data, dict) else 'Требования не указаны'
-            requirements = re.sub(r'<[^>]+>', '', requirements)  # ← Очистка требований
-
+            requirements_null = ''
+            if isinstance(requirements_data, dict):
+                requirements_null = requirements_data.get('requirement', '')
+            requirements = cls._validate_requirements_and_clean(requirements_null)
             # Ссылку
             url = data.get('alternate_url', '')
 

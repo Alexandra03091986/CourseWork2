@@ -29,7 +29,7 @@ class FileWorker(ABC):
 class JsonFileWorker(FileWorker):
     """Класс для работы с файлами Json"""
 
-    def __init__(self, filename: str = "../data/vacancies.json"):
+    def __init__(self, filename: str = "data/vacancies.json"):
         self.__filename = filename
         self._file_exists()
 
@@ -102,35 +102,3 @@ class JsonFileWorker(FileWorker):
         """Получить все вакансии из JSON-файла"""
         return self._read_file()
 
-
-# Пример использования
-if __name__ == "__main__":
-    # Создаем хранилища с разными именами файлов
-    json_storage = JsonFileWorker("../data/my_vacancies.json")
-
-    # Пример вакансии
-    vacancy_data = {
-        'id': 'hh_12345',
-        'name': 'Python Developer',
-        'salary': 100000,
-        'city': 'Москва',
-        'requirements': 'Опыт работы 3 года',
-        'url': 'https://hh.ru/vacancy/12345'
-    }
-
-    # Добавляем в оба хранилища (дубликаты не добавятся)
-    json_storage.add_vacancy(vacancy_data)
-
-    # Пробуем добавить дубликат (не добавится)
-    json_storage.add_vacancy(vacancy_data)
-
-    # Получаем данные по критериям
-    python_vacancies = json_storage.get_vacancies(name='Python Developer')
-    print(f"Найдено {len(python_vacancies)} вакансий Python Developer")
-
-    # Получаем все вакансии
-    all_vacancies = json_storage.get_all_vacancies()
-    print(f"Всего вакансий в JSON: {len(all_vacancies)}")
-
-    # Удаляем вакансию
-    json_storage.delete_vacancy('hh_12345')
