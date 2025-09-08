@@ -95,10 +95,9 @@ class JsonFileWorker(FileWorker):
         """Удалить вакансию по ID из JSON-файла"""
         data = self._read_file()
         # Ищем по разным возможным полям ID
-        data = [v for v in data if v.get('id') != vacancy_id and v.get('url') != vacancy_id]
+        data = [v for v in data if v.get('id') != vacancy_id and v.get('alternate_url') != vacancy_id]
         self._write_file(data)
 
     def get_all_vacancies(self) -> list:
         """Получить все вакансии из JSON-файла"""
         return self._read_file()
-
