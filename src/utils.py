@@ -1,5 +1,4 @@
 
-
 def get_filtered_by_keyword(vacancies_list, keyword):
     """
     Фильтрует вакансии по ключевому слову в описании требований

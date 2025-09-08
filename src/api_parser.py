@@ -64,8 +64,3 @@ class HeadHunterAPI(Parser):
             print(f"Ошибка при загрузке: {e}")
             return []
         return self.__vacancies
-
-# if __name__ == "__main__":
-#     hh_api = HeadHunterAPI()
-#     vacancies = hh_api.load_vacancies("python")
-#     print(f"Загружено {len(vacancies)} вакансий")

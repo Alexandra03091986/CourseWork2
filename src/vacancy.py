@@ -1,7 +1,5 @@
 import re
 
-from src.api_parser import HeadHunterAPI
-
 
 class Vacancy:
     # Используем __slots__ для экономии памяти
@@ -43,9 +41,7 @@ class Vacancy:
     @classmethod
     def _validate_requirements_and_clean(cls, requirements: str) -> str:
         """Валидация требований"""
-        # if not requirements or not isinstance(requirements, str):
-        #     return "Требования не указаны"
-        # return requirements.strip()
+
         if not requirements or not isinstance(requirements, str):
             return "Требования не указаны"
 
@@ -132,16 +128,3 @@ class Vacancy:
             vacancies.append(vacancy)
 
         return vacancies
-
-# # Получаем данные с HH
-# hh_api = HeadHunterAPI()
-# hh_data = hh_api.load_vacancies("Python")
-#
-# # Создаем вакансии
-# vacancies = Vacancy.cast_to_object_list(hh_data)
-#
-# # Выводим список красиво
-# print(f"Найдено {len(vacancies)} вакансий:")
-# for vac in vacancies[:10]:  # первые 10
-#     print(vac)
-#     print('---')
