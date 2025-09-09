@@ -26,11 +26,23 @@ def info_vacancies_2() -> Vacancy:
         "https://hh.ru/vacancy/123486611")
 
 @pytest.fixture
-def info_vacancies_salary_zero():
+def info_vacancies_salary_none():
     """Пример вакансии с зарплатой None"""
     return Vacancy(
         "Фронтенд-разработчик",
         None,
+        "Протвино (Московская область)",
+        "Профильное высшее образование. Знание фундаментальных....",
+        "https://hh.ru/vacancy/125063056"
+    )
+
+
+@pytest.fixture
+def info_vacancies_salary_zero():
+    """Пример вакансии с зарплатой None"""
+    return Vacancy(
+        "Фронтенд-разработчик",
+        "",
         "Протвино (Московская область)",
         "Профильное высшее образование. Знание фундаментальных....",
         "https://hh.ru/vacancy/125063056"
@@ -68,6 +80,17 @@ def info_vacancies_salary_from_to():
         "Коммуникабельных людей.  Опыт работы не менее 2 лет....",
         "https://hh.ru/vacancy/124824193"
     )
+
+
+@pytest.fixture
+def vacancies_requirements_and_clean() -> Vacancy:
+    """Пример вакансии для тестов"""
+    return Vacancy(
+        "Специалист по прогулкам",
+        80111,
+        "Ставрополь",
+        "",
+        "https://hh.ru/vacancy/123486611")
 
 
 @pytest.fixture

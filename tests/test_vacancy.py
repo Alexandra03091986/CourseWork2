@@ -1,4 +1,3 @@
-# from tests.conftest import info_vacancies
 from src.vacancy import Vacancy
 
 
@@ -55,7 +54,11 @@ def test_repr_(info_vacancies_2):
     assert "80111 руб." in result
 
 
-def test_validate_salary_none(info_vacancies_salary_zero):
+def test_validate_salary_none(info_vacancies_salary_none):
+    assert info_vacancies_salary_none.salary == 0
+
+
+def test_validate_salary_zero(info_vacancies_salary_zero):
     assert info_vacancies_salary_zero.salary == 0
 
 
@@ -75,7 +78,43 @@ def test_vacancies_salaty(info_vacancies):
     assert info_vacancies.salary == 250000
 
 
-def test_validate_salary_zero():
+def test_validate_salary_zero_():
     """Тест: ноль"""
     vacancy = Vacancy("Test", 0, "City", "Req", "http://test.com")
     assert vacancy.salary == 0
+
+
+def test_validate_requirements_and_clean(vacancies_requirements_and_clean):
+    assert vacancies_requirements_and_clean.requirements == "Требования не указаны"
+    vacancy = Vacancy("Test", 0, "City", None, "http://test.com")
+    assert vacancy.requirements == "Требования не указаны"
+
+
+def test_cast_simple():
+    """Тестирование создания из данных"""
+    # Минимальные данные
+    simple_data = [{
+        'name': 'Тест',
+        'salary': {'from': 50000},
+        'area': {'name': 'Город'},
+        'snippet': {'requirement': 'Требования'},
+        'alternate_url': 'http://test.com'
+    }]
+
+    vacancies = Vacancy.cast_to_object_list(simple_data)
+
+    assert vacancies[0].name == "Тест"
+
+
+def test_cast_no_salary():
+    """Тест: нет зарплаты"""
+    test_data = [{
+        'name': 'Developer',
+        'salary': None,
+        'area': {'name': 'СПб'},
+        'snippet': {'requirement': 'Опыт'},
+        'alternate_url': 'https://hh.ru/vacancy/456'
+    }]
+
+    vacancies = Vacancy.cast_to_object_list(test_data)
+    assert vacancies[0].salary == 0
