@@ -84,6 +84,7 @@ def test_write_file(tmp_path):
     if os.path.exists("test_file.json"):
         os.remove("test_file.json")
 
+
 def test_is_duplicate_true():
     """Тест проверяет, является ли вакансия дубликатом"""
     worker = JsonFileWorker("test_file.json")
@@ -102,6 +103,7 @@ def test_is_duplicate_false():
     new_vacancies = {"name": "Java Developer", "city": "СПб", "url": "https://hh.ru/vacancy/124874334"}
     result = worker._is_duplicate(new_vacancies, vacancies)
     assert result == False
+
 
 def test_add_vacancy():
     """Тест добавляет новые вакансии"""
@@ -178,6 +180,7 @@ def test_delete_vacancy_by_id():
     # Очистка
     if os.path.exists("test_file.json"):
         os.remove("test_file.json")
+
 
 def test_delete_vacancy_by_alternate_url():
     """Тест удаления вакансии по alternate_url"""
