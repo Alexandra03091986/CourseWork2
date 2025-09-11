@@ -22,6 +22,7 @@ def test_sort_vacancies_normal_input(vacancies_for_filter):
         assert result[1].salary == 80000
         assert result[2].salary == 3000
 
+
 def test_sort_vacancies_positive_number():
     with patch('builtins.input', side_effect=['-2', '1']):
        test_vacancy = Vacancy("Специалист по кадрам", 3000, "Минск", "Личные качества: Стрессоустойчивость, коммуникабельность, ответственность.", "https://hh.ru/vacancy/125033362")
