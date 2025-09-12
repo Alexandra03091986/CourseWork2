@@ -1,11 +1,20 @@
 import re
+from typing import Any, Dict, List, Union
 
 
 class Vacancy:
+    """Класс для представления вакансии с валидацией данных."""
     # Используем __slots__ для экономии памяти
     __slots__ = ('name', 'salary', 'city', 'requirements', 'url')
 
-    def __init__(self, name: str, salary: int | None, city: str, requirements: str, url: str):
+    def __init__(
+            self,
+            name: str,
+            salary: Union[int, None, Dict[str, Any], str],
+            city: str,
+            requirements: str | None,
+            url: str
+    ) -> None:
         """
         Инициализация вакансии
         name: Название вакансии
@@ -20,9 +29,12 @@ class Vacancy:
         self.requirements = self._validate_requirements_and_clean(requirements)
         self.url = url
 
-    def _validate_salary(self, salary: int | None) -> int:
+    def _validate_salary(
+            self,
+            salary: Union[int, None, Dict[str, Any], str]
+    ) -> int:
         """
-        Приватный метод для валидации зарплаты.
+        Метод для валидации зарплаты.
         Если зарплата не указана (None), возвращает 0.
         """
         if salary is None:
@@ -40,7 +52,7 @@ class Vacancy:
 
     @classmethod
     def _validate_requirements_and_clean(cls, requirements: str) -> str:
-        """Валидация требований"""
+        """Валидация входных данных и очищение требования от HTML"""
 
         if not requirements or not isinstance(requirements, str):
             return "Требования не указаны"
@@ -50,19 +62,19 @@ class Vacancy:
         return cleaned.strip()
 
     # Методы сравнения
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Проверка на равенство по зарплате"""
         if not isinstance(other, Vacancy):
             return NotImplemented
         return self.salary == other.salary
 
-    def __lt__(self, other) -> bool:
+    def __lt__(self, other: object) -> bool:
         """Проверка: меньше ли зарплата"""
         if not isinstance(other, Vacancy):
             return NotImplemented
         return self.salary < other.salary
 
-    def __gt__(self, other) -> bool:
+    def __gt__(self, other: object) -> bool:
         """Проверка: больше ли зарплата"""
         if not isinstance(other, Vacancy):
             return NotImplemented
@@ -94,7 +106,7 @@ class Vacancy:
         }
 
     @classmethod
-    def cast_to_object_list(cls, vacancies_data: dict) -> list:
+    def cast_to_object_list(cls, vacancies_data: List[Dict[str, Any]]) -> List:
         """Простое создание вакансий из данных HeadHunter"""
         vacancies = []
 

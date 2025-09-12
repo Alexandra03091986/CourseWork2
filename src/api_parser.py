@@ -1,7 +1,7 @@
-from typing import List, Dict, Any
+from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Union
 
 import requests
-from abc import ABC, abstractmethod
 
 
 class Parser(ABC):
@@ -13,7 +13,7 @@ class Parser(ABC):
         ...
 
     @abstractmethod
-    def load_vacancies(self, query: str, **kwargs) -> List[Dict[str, Any]]:
+    def load_vacancies(self, query: str, **kwargs: Any) -> List[Dict[str, Any]]:
         """Получение списка вакансий по поисковому запросу"""
         ...
 
@@ -23,11 +23,12 @@ class HeadHunterAPI(Parser):
     Класс для работы с API HeadHunter
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Инициализация парсера HeadHunter API"""
         self.__base_url = 'https://api.hh.ru/vacancies'
         self.connected = False
-        self.__params = {'text': '', 'page': 0, 'per_page': 100}
-        self.__vacancies = []
+        self.__params: Dict[str, Union[str, int]] = {'text': '', 'page': 0, 'per_page': 100}
+        self.__vacancies: List[Dict[str, Any]] = []
 
     def _connecting(self) -> bool:
         """ Установка соединения с API"""
@@ -39,7 +40,7 @@ class HeadHunterAPI(Parser):
             self.connected = False
             return False
 
-    def load_vacancies(self, query: str, **kwargs) -> list[Any] | None:
+    def load_vacancies(self, query: str, **kwargs: Any) -> List[Dict[str, Any]]:
         """Получение списка вакансий по поисковому запросу"""
 
         # Проверяем подключение перед получением данных

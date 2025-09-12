@@ -5,7 +5,7 @@ import requests.exceptions
 from src.api_parser import HeadHunterAPI
 
 
-def test_connecting_success():
+def test_connecting_success() -> None:
     """Тест успешного соединения"""
     api_request = HeadHunterAPI()
     # Проверяем что возвращает метод True или False
@@ -13,32 +13,35 @@ def test_connecting_success():
     assert isinstance(result, bool)
 
 
-def test_connecting_exception():
+def test_connecting_exception() -> None:
     """Тест обработки ошибок соединения"""
     api_request = HeadHunterAPI()
     result = api_request._connecting()
     assert result in [True, False]
     print(f"Результат соединения: {result}")
 
-def test_connecting_exception_with_mock():
+
+def test_connecting_exception_with_mock() -> None:
+    """Тестирование обработки исключений при соединении с использованием мока"""
     api_request = HeadHunterAPI()
     with patch('requests.get') as mock_get:
         mock_get.side_effect = requests.exceptions.RequestException("Ошибка соединения")
         result = api_request._connecting()
-        assert result == False
-        assert api_request.connected == False
+        assert not result
+        assert not api_request.connected
 
 
-def test_connecting_no_error():
+def test_connecting_no_error() -> None:
+    """Тестирование успешного соединения с использованием мока"""
     api_request = HeadHunterAPI()
     with patch('requests.get') as mock_get:
         mock_get.return_value.status_code = 200
         result = api_request._connecting()
-        assert result == True
-        assert api_request.connected == True
+        assert result
+        assert api_request.connected
 
 
-def test_load_vacancies_success():
+def test_load_vacancies_success() -> None:
     """Тест успешной загрузки вакансий"""
     api_request = HeadHunterAPI()
     with patch.object(api_request, '_connecting', return_value=True):
@@ -59,7 +62,7 @@ def test_load_vacancies_no_connection() -> None:
         assert result == []
 
 
-def test_load_vacancies_exceptions():
+def test_load_vacancies_exceptions() -> None:
     """Тест, что при исключении возвращается пустой список"""
     api_requests = HeadHunterAPI()
 

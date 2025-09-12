@@ -1,11 +1,10 @@
 from src.api_parser import HeadHunterAPI
 from src.file_worker import JsonFileWorker
-from src.utils import print_vacancies, get_filtered_by_city, get_filtered_by_keyword, \
-    get_sort_vacancies
+from src.utils import get_filtered_by_city, get_filtered_by_keyword, get_sort_vacancies, print_vacancies
 from src.vacancy import Vacancy
 
 
-def user_interaction():
+def user_interaction() -> None:
     """Функция для взаимодействия с пользователем"""
     platforms = ["HeadHunter"]
     print(f"=== Система поиска вакансий на {platforms} ===\n")
@@ -29,7 +28,7 @@ def user_interaction():
         json_saver.add_vacancy(vacancy.to_dict())
 
     # 2 Поиск по слову
-    keyword  = input("\n2. Введите ключевое слово для поиска в описании: ")
+    keyword = input("\n2. Введите ключевое слово для поиска в описании: ")
     filtered_by_keyword = get_filtered_by_keyword(vacancies_list, keyword)
 
     # 3. Фильтр по городу
@@ -41,6 +40,7 @@ def user_interaction():
     print(f"\n🎯 ИТОГОВЫЙ СПИСОК ({len(top_vacancies)} вакансий):")
 
     print_vacancies(top_vacancies)
+
 
 if __name__ == "__main__":
     user_interaction()

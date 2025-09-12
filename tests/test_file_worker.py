@@ -1,10 +1,11 @@
 import json
 import os.path
+from typing import Any, Dict, List
 
 from src.file_worker import JsonFileWorker
 
 
-def test_json_file_worker_init(json_file_worker_init):
+def test_json_file_worker_init(json_file_worker_init: List[Dict[str, Any]]) -> None:
     """Проверка инициализации JsonFileWorker"""
     assert len(json_file_worker_init) > 0
     assert 'name' in json_file_worker_init[0]
@@ -14,11 +15,12 @@ def test_json_file_worker_init(json_file_worker_init):
     assert 'url' in json_file_worker_init[0]
 
 
-def test_file_exists_false():
-    assert os.path.exists('file.json') == False
+def test_file_exists_false() -> None:
+    """Проверяет, что файл не существует по умолчанию"""
+    assert not os.path.exists('file.json')
 
 
-def test_file_exists(tmp_path):
+def test_file_exists(tmp_path: Any) -> None:
     """Тест на проверку создания файла"""
     test_file = tmp_path / "vacancies.json"
     # Проверяем, что файла нет
@@ -30,14 +32,14 @@ def test_file_exists(tmp_path):
     assert test_file.exists()
 
 
-def test_read_file():
+def test_read_file() -> None:
     """Проверяет работу метода"""
     worker = JsonFileWorker("test_file.json")
     result = worker._read_file()
     assert isinstance(result, list)
 
 
-def test_read_file_not_found_error(tmp_path):
+def test_read_file_not_found_error(tmp_path: Any) -> None:
     """Тест обработки FileNotFoundError"""
     test_file = tmp_path / "not_exists.json"
     worker = JsonFileWorker(test_file)
@@ -45,7 +47,7 @@ def test_read_file_not_found_error(tmp_path):
     assert result == []
 
 
-def test_read_file_json_decode_error(tmp_path):
+def test_read_file_json_decode_error(tmp_path: Any) -> None:
     """Тест обработки JSONDecodeError"""
     # Создаем файл с broken JSON
     test_file = tmp_path / "test_file.json"
@@ -58,7 +60,7 @@ def test_read_file_json_decode_error(tmp_path):
     assert result == []
 
 
-def test_read_file_errors():
+def test_read_file_errors() -> None:
     """Тест ошибок чтения"""
     # Проверяем, что при ошибках возвращается пустой список
     worker = JsonFileWorker("nonexistent_file.json")
@@ -69,11 +71,17 @@ def test_read_file_errors():
         os.remove("nonexistent_file.json")
 
 
-def test_write_file(tmp_path):
+def test_write_file(tmp_path: Any) -> None:
+    """Тест записи данных в файл"""
     test_file = tmp_path / "test_file.json"
     worker = JsonFileWorker(test_file)
-    test_data = [{"name": "Финансовый директор (CFO)", "salary": 400000,
-    "city": "Москва"}]
+    test_data = [
+        {
+            "name": "Финансовый директор (CFO)",
+            "salary": 400000,
+            "city": "Москва"
+        }
+    ]
     worker._write_file(test_data)
     # Проверяем что файл создался и содержит правильные данные
     assert test_file.exists()
@@ -85,7 +93,7 @@ def test_write_file(tmp_path):
         os.remove("test_file.json")
 
 
-def test_is_duplicate_true():
+def test_is_duplicate_true() -> None:
     """Тест проверяет, является ли вакансия дубликатом"""
     worker = JsonFileWorker("test_file.json")
     vacancies = [{"name": "Pyton Developer", "city": "Москва", "url": "https://hh.ru/vacancy/124990352"},
@@ -93,19 +101,19 @@ def test_is_duplicate_true():
                  ]
     new_vacancies = {"name": "Pyton Developer", "city": "Москва", "url": "https://hh.ru/vacancy/124990352"}
     result = worker._is_duplicate(new_vacancies, vacancies)
-    assert result == True
+    assert result
 
 
-def test_is_duplicate_false():
+def test_is_duplicate_false() -> None:
     """Тест проверяет, что вакансия не является дубликатом"""
     worker = JsonFileWorker("test_file.json")
     vacancies = [{"name": "Pyton Developer", "city": "Москва", "url": "https://hh.ru/vacancy/124990352"}]
     new_vacancies = {"name": "Java Developer", "city": "СПб", "url": "https://hh.ru/vacancy/124874334"}
     result = worker._is_duplicate(new_vacancies, vacancies)
-    assert result == False
+    assert not result
 
 
-def test_add_vacancy():
+def test_add_vacancy() -> None:
     """Тест добавляет новые вакансии"""
     worker = JsonFileWorker("test_file.json")
     vacancy = {"name": "Pyton Developer", "city": "Москва", "url": "https://hh.ru/vacancy/124990352"}
@@ -116,7 +124,7 @@ def test_add_vacancy():
     assert data[0] == vacancy
 
 
-def test_add_vacancy_duplicate():
+def test_add_vacancy_duplicate() -> None:
     """Тест на не добавление дубликатов"""
     worker = JsonFileWorker("test_file_add_not_duplicate.json")
     vacancy = {"name": "Pyton Developer", "url": "https://hh.ru/vacancy/124990352", "city": "Москва"}
@@ -131,7 +139,9 @@ def test_add_vacancy_duplicate():
     if os.path.exists("test_file_add_not_duplicate.json"):
         os.remove("test_file_add_not_duplicate.json")
 
-def test_get_vacancies_not_criteria():
+
+def test_get_vacancies_not_criteria() -> None:
+    """Тест получения всех вакансий без критериев"""
     worker = JsonFileWorker("test_file.json")
     vacancy = [{"name": "Pyton Developer", "city": "Москва", "url": "https://hh.ru/vacancy/124990352"},
                {"name": "Java Developer", "city": "СПб", "url": "https://hh.ru/vacancy/124874334"}
@@ -144,7 +154,7 @@ def test_get_vacancies_not_criteria():
         os.remove("test_file.json")
 
 
-def test_get_vacancies_by_criteria():
+def test_get_vacancies_by_criteria() -> None:
     """Тест фильтрации по критериям"""
     worker = JsonFileWorker("test_file.json")
     vacancy = [{"name": "Pyton Developer", "salary": 100, "city": "Москва", "url": "https://hh.ru/vacancy/124990352"},
@@ -164,12 +174,25 @@ def test_get_vacancies_by_criteria():
         os.remove("test_file.json")
 
 
-def test_delete_vacancy_by_id():
+def test_delete_vacancy_by_id() -> None:
     """Тест удаления вакансии по ID"""
     worker = JsonFileWorker("test_file.json")
-    vacancy = [{"id": "123", "name": "Pyton Developer", "salary": 100, "city": "Москва", "url": "https://hh.ru/vacancy/124990352"},
-               {"id": "456", "name": "Java Developer", "salary": 200, "city": "СПб", "url": "https://hh.ru/vacancy/124874334"}
-               ]
+    vacancy = [
+        {
+            "id": "123",
+            "name": "Pyton Developer",
+            "salary": 100,
+            "city": "Москва",
+            "url": "https://hh.ru/vacancy/124990352"
+        },
+        {
+            "id": "456",
+            "name": "Java Developer",
+            "salary": 200,
+            "city": "СПб",
+            "url": "https://hh.ru/vacancy/124874334"
+        }
+    ]
     worker._write_file(vacancy)
     # Удаляем вакансии по ID "123"
     worker.delete_vacancy("123")
@@ -182,12 +205,25 @@ def test_delete_vacancy_by_id():
         os.remove("test_file.json")
 
 
-def test_delete_vacancy_by_alternate_url():
+def test_delete_vacancy_by_alternate_url() -> None:
     """Тест удаления вакансии по alternate_url"""
     worker = JsonFileWorker("test_file.json")
-    vacancy = [{"id": "123", "name": "Pyton Developer", "salary": 100, "city": "Москва", "alternate_url": "https://hh.ru/vacancy/124990352"},
-               {"id": "456", "name": "Java Developer", "salary": 200, "city": "СПб", "alternate_url": "https://hh.ru/vacancy/124874334"}
-               ]
+    vacancy = [
+        {
+            "id": "123",
+            "name": "Pyton Developer",
+            "salary": 100,
+            "city": "Москва",
+            "alternate_url": "https://hh.ru/vacancy/124990352"
+        },
+        {
+            "id": "456",
+            "name": "Java Developer",
+            "salary": 200,
+            "city": "СПб",
+            "alternate_url": "https://hh.ru/vacancy/124874334"
+        }
+    ]
     worker._write_file(vacancy)
     # Удаляем вакансии по alternate_url
     worker.delete_vacancy("https://hh.ru/vacancy/124990352")
@@ -200,12 +236,25 @@ def test_delete_vacancy_by_alternate_url():
         os.remove("test_file.json")
 
 
-def test_get_all_vacancies():
-    """Тест удаления вакансии по ID"""
+def test_get_all_vacancies() -> None:
+    """Тест получения всех вакансий"""
     worker = JsonFileWorker("test_file.json")
-    vacancy = [{"id": "123", "name": "Pyton Developer", "salary": 100, "city": "Москва", "url": "https://hh.ru/vacancy/124990352"},
-               {"id": "456", "name": "Java Developer", "salary": 200, "city": "СПб", "url": "https://hh.ru/vacancy/124874334"}
-               ]
+    vacancy = [
+        {
+            "id": "123",
+            "name": "Pyton Developer",
+            "salary": 100,
+            "city": "Москва",
+            "url": "https://hh.ru/vacancy/124990352"
+        },
+        {
+            "id": "456",
+            "name": "Java Developer",
+            "salary": 200,
+            "city": "СПб",
+            "url": "https://hh.ru/vacancy/124874334"
+        }
+    ]
     worker._write_file(vacancy)
     result = worker.get_all_vacancies()
     assert len(result) == 2

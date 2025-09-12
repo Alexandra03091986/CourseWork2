@@ -1,5 +1,9 @@
+from typing import List
 
-def get_filtered_by_keyword(vacancies_list, keyword):
+from src.vacancy import Vacancy
+
+
+def get_filtered_by_keyword(vacancies_list: List[Vacancy], keyword: str) -> List[Vacancy]:
     """
     Фильтрует вакансии по ключевому слову в описании требований
     vacancies_list: Список вакансий для фильтрации
@@ -15,7 +19,7 @@ def get_filtered_by_keyword(vacancies_list, keyword):
     return filtered_by_keyword
 
 
-def get_filtered_by_city(filtered_by_keyword, city):
+def get_filtered_by_city(filtered_by_keyword: List[Vacancy], city: str) -> List[Vacancy]:
     """
     Фильтрует вакансии по названию города
     filtered_by_keyword: Список вакансий, уже отфильтрованных по ключевому слову
@@ -32,7 +36,7 @@ def get_filtered_by_city(filtered_by_keyword, city):
     return filtered_by_city
 
 
-def get_sort_vacancies(filtered_by_city):
+def get_sort_vacancies(filtered_by_city: List[Vacancy]) -> List[Vacancy]:
     """
     Сортирует вакансии по зарплате и возвращает топ N вакансий.
     Запрашивает у пользователя количество вакансий с проверкой ввода.
@@ -57,7 +61,7 @@ def get_sort_vacancies(filtered_by_city):
             print("❌ Нужно ввести число! Попробуйте снова.")
 
 
-def print_vacancies(vacancies):
+def print_vacancies(vacancies: List[Vacancy]) -> None:
     """
     Выводит отформатированную информацию о вакансиях.
     :vacancies: Список объектов Vacancy для вывода
