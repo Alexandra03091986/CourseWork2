@@ -36,7 +36,7 @@ def get_filtered_by_city(filtered_by_keyword: List[Vacancy], city: str) -> List[
     return filtered_by_city
 
 
-def get_sort_vacancies(filtered_by_city: List[Vacancy]) -> List[Vacancy]:
+def get_sort_vacancies(filtered_by_city: List[Vacancy]) -> List[Vacancy] | None:
     """
     Сортирует вакансии по зарплате и возвращает топ N вакансий.
     Запрашивает у пользователя количество вакансий с проверкой ввода.
